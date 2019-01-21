@@ -1,6 +1,6 @@
 const model = require('../models/categoria.model')
 
-function findAll() {
+function findAll () {
   return new Promise(async (resolve, reject) => {
     try {
       const categorias = await model.findAll()
@@ -12,7 +12,19 @@ function findAll() {
   })
 }
 
-function create(categoria) {
+function findById (id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const categoria = await model.findByPk(id)
+      resolve(categoria)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+function create (categoria) {
   return new Promise(async (resolve, reject) => {
     try {
       const result = await model.create(categoria)
@@ -24,10 +36,10 @@ function create(categoria) {
   })
 }
 
-function update(id) {
+function update (data, id) {
   return new Promise(async (resolve, reject) => {
     try {
-      const categoria = await model.create(id)
+      const categoria = await model.update(data, { where: { id } })
       resolve(categoria)
     } catch (error) {
       console.log(error)
@@ -36,10 +48,10 @@ function update(id) {
   })
 }
 
-function del(id) {
+function del (id) {
   return new Promise(async (resolve, reject) => {
     try {
-      const categoria = await model.create(id)
+      const categoria = await model.destroy({ where: { id } })
       resolve(categoria)
     } catch (error) {
       console.log(error)
@@ -48,5 +60,4 @@ function del(id) {
   })
 }
 
-
-module.exports = { findAll, create, update, del }
+module.exports = { findAll, findById, create, update, del }

@@ -1,2 +1,4 @@
 node_modules
 .env
+token-teste.js
+.eslintrc.json

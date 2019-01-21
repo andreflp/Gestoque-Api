@@ -1,6 +1,6 @@
 const model = require('../models/produto.model')
 
-function findAll() {
+function findAll () {
   return new Promise(async (resolve, reject) => {
     try {
       const produtos = await model.findAll()
@@ -12,7 +12,19 @@ function findAll() {
   })
 }
 
-function create(data) {
+function findById (id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const produto = await model.findByPk(id)
+      resolve(produto)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+function create (data) {
   return new Promise(async (resolve, reject) => {
     try {
       const produto = await model.create(data)
@@ -24,10 +36,10 @@ function create(data) {
   })
 }
 
-function update(id) {
+function update (data, id) {
   return new Promise(async (resolve, reject) => {
     try {
-      const produto = await model.create(id)
+      const produto = await model.update(data, { where: { id } })
       resolve(produto)
     } catch (error) {
       console.log(error)
@@ -36,10 +48,10 @@ function update(id) {
   })
 }
 
-function del(id) {
+function del (id) {
   return new Promise(async (resolve, reject) => {
     try {
-      const produto = await model.create(id)
+      const produto = await model.destroy({ where: { id } })
       resolve(produto)
     } catch (error) {
       console.log(error)
@@ -48,5 +60,4 @@ function del(id) {
   })
 }
 
-
-module.exports = { findAll, create, update, del }
+module.exports = { findAll, create, update, del, findById }

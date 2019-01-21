@@ -2,23 +2,28 @@ const db = require('../config/db')
 const type = db.Sequelize
 const Produto = require('../models/produto.model')
 
-let Categoria = db.define('categoria', {
-  id: {
-    type: type.INTEGER.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true
+let Categoria = db.define(
+  'categoria',
+  {
+    id: {
+      type: type.INTEGER.UNSIGNED,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    nome: {
+      type: type.STRING,
+      allowNull: false,
+      unique: true
+    },
+    createdAt: {
+      type: type.DATE,
+      defaultValue: type.NOW
+    }
   },
-  nome: {
-    type: type.STRING,
-    allowNull: false
-  },
-  createdAt: {
-    type: type.DATE,
-    defaultValue: type.NOW
+  {
+    freezeTableName: true
   }
-}, {
-    freezeTableName: true,
-  })
+)
 
 Categoria.hasMany(Produto, {
   foreignKey: 'categoriaId',
@@ -27,5 +32,3 @@ Categoria.hasMany(Produto, {
 })
 
 module.exports = Categoria
-
-
