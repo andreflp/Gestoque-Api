@@ -1,4 +1,5 @@
-const router = require('../server/index')
+const Router = require('restify-router').Router
+const router = new Router()
 const service = require('../services/usuario.service')
 
 router.get('/usuario', async (req, res, next) => {

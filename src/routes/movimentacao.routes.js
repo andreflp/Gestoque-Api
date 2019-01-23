@@ -1,4 +1,5 @@
-const router = require('../server/index')
+const Router = require('restify-router').Router
+const router = new Router()
 const serviceMovimentacao = require('../services/movimentacao.service')
 const serviceProduto = require('../services/produto.service')
 

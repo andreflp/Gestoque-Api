@@ -20,7 +20,8 @@ let Fornecedor = db.define(
     },
     cnpj: {
       type: type.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     email: {
       type: type.STRING,

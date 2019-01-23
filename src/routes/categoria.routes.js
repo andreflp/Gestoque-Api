@@ -1,24 +1,32 @@
-const router = require('../server/index')
+const Router = require('restify-router').Router
+const router = new Router()
 const service = require('../services/categoria.service')
+const server = require('../server/index')
 
 router.get('/categoria', async (req, res, next) => {
   try {
     const categorias = await service.findAll()
     res.send({ categorias })
-    next()
+    return next()
   } catch (error) {
-    next(error)
+    res.send(400, { error: error.parent.sqlMessage })
+    return next()
   }
 })
 
 router.get('/categoria/:id', async (req, res, next) => {
   try {
     const data = req.params.id
-    const categorias = await service.findById(data)
-    res.send({ categorias })
-    next()
+    const categoria = await service.findById(data)
+    if (categoria === null) {
+      res.send(404, { msg: 'Categoria não encontrada' })
+      return next(false)
+    }
+    res.send({ categoria })
+    return next()
   } catch (error) {
-    next(error)
+    res.send(400, { error: error.parent.sqlMessage })
+    return next()
   }
 })
 
@@ -27,32 +35,48 @@ router.post('/categoria', async (req, res, next) => {
     const categoria = req.body
     const result = await service.create(categoria)
     res.send({ result })
-    next()
+    return next()
   } catch (error) {
     res.send(400, { error: error.parent.sqlMessage })
+    return next()
   }
 })
 
-router.put('/categoria', async (req, res, next) => {
+router.put('/categoria/:id', async (req, res, next) => {
   try {
+    const id = req.params.id
     const data = req.body
-    await service.update(data)
+    const categoria = await service.findById(id)
+    if (categoria === null) {
+      res.send(404, { msg: 'Categoria não encontrada' })
+      return next(false)
+    }
+    await service.update(data, id)
     res.send({ msg: 'Categoria atualizada com sucesso' })
-    next()
+    return next()
   } catch (error) {
-    next(error)
+    res.send(400, { error: error.parent.sqlMessage })
+    return next()
   }
 })
 
 router.del('/categoria/:id', async (req, res, next) => {
   try {
-    const data = req.params.id
-    await service.del(data)
+    const id = req.params.id
+    const categoria = await service.findById(id)
+    if (categoria === null) {
+      res.send(404, { msg: 'Categoria não encontrada' })
+      return next(false)
+    }
+    await service.del(id)
     res.send({ msg: 'Categoria excluida com sucesso' })
-    next()
+    return next()
   } catch (error) {
-    next(error)
+    res.send(400, { error: error.parent.sqlMessage })
+    return next()
   }
 })
+
+router.applyRoutes(server)
 
 module.exports = router

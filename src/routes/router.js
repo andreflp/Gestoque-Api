@@ -1,9 +1,7 @@
-const produtos = require('./produto.routes')
-const fornecedores = require('./fornecedor.routes')
-const categorias = require('./categoria.routes')
-const movimentacoes = require('./movimentacao.routes')
-const usuarios = require('./usuario.routes')
+const fs = require('fs')
+const path = require('path')
 
-const router = [produtos, fornecedores, categorias, movimentacoes, usuarios]
-
-module.exports = router
+module.exports = fs
+  .readdirSync('../../Dev/gestoque-api/src/routes')
+  .filter(file => file.indexOf('.') !== 0 && file !== 'index.js')
+  .forEach(file => require(path.resolve(__dirname, file)))
