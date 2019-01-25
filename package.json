@@ -13,11 +13,14 @@
   "dependencies": {
     "@types/restify": "^7.2.7",
     "@types/restify-errors": "^4.3.3",
+    "jsonwebtoken": "^8.4.0",
     "mysql2": "^1.6.4",
     "nodemon": "^1.18.9",
     "restify": "^7.5.0",
     "restify-cors-middleware": "^1.1.1",
     "restify-errors": "^6.1.1",
+    "restify-jwt": "^0.4.0",
+    "restify-jwt-community": "^1.0.9",
     "restify-router": "^0.5.1",
     "sequelize": "^4.42.0"
   },

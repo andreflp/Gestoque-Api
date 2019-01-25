@@ -12,10 +12,13 @@ const sequelize = new Sequelize(
       timestamps: false
     },
     operatorsAliases: false,
-    dialectOptions: { decimalNumbers: true }
+    dialectOptions: {
+      decimalNumbers: true,
+      supportBigNumbers: true
+    }
   }
 )
 
-sequelize.sync({ force: true })
+sequelize.sync()
 
 module.exports = sequelize

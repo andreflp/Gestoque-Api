@@ -25,7 +25,10 @@ let Fornecedor = db.define(
     },
     email: {
       type: type.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isEmail: true
+      }
     },
     cep: {
       type: type.STRING,

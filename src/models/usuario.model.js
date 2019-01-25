@@ -1,7 +1,8 @@
 const db = require('../config/db')
 const type = db.Sequelize
+const bcrypt = require('bcrypt')
 
-let Usuario = db.define(
+const Usuario = db.define(
   'usuario',
   {
     id: {
@@ -19,7 +20,10 @@ let Usuario = db.define(
     },
     email: {
       type: type.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isEmail: true
+      }
     },
     usuario: {
       type: type.STRING,
@@ -38,5 +42,10 @@ let Usuario = db.define(
     freezeTableName: true
   }
 )
+
+Usuario.beforeCreate(async (usuario, options) => {
+  const hash = await bcrypt.hash(usuario.senha, 10)
+  usuario.senha = hash
+})
 
 module.exports = Usuario

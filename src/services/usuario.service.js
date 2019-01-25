@@ -12,10 +12,10 @@ function findAll () {
   })
 }
 
-function create (data) {
+function findById (id) {
   return new Promise(async (resolve, reject) => {
     try {
-      const usuario = await model.create(data)
+      const usuario = await model.findByPk(id)
       resolve(usuario)
     } catch (error) {
       console.log(error)
@@ -24,10 +24,37 @@ function create (data) {
   })
 }
 
-function update (data) {
+function findByUsuario (usuario) {
   return new Promise(async (resolve, reject) => {
     try {
-      const usuario = await model.update(data, { where: { id: data.id } })
+      const result = await model.findOne({
+        where: { usuario: usuario },
+        attributes: ['usuario', 'senha']
+      })
+      resolve(result)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+function create (usuario) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await model.create(usuario)
+      resolve(result)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+function update (data, id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const usuario = await model.update(data, { where: { id } })
       resolve(usuario)
     } catch (error) {
       console.log(error)
@@ -48,4 +75,4 @@ function del (id) {
   })
 }
 
-module.exports = { findAll, create, update, del }
+module.exports = { findAll, create, update, del, findById, findByUsuario }

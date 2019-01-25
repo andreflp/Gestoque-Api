@@ -1,5 +1,6 @@
 const Router = require('restify-router').Router
 const router = new Router()
+const server = require('../server/index')
 const serviceMovimentacao = require('../services/movimentacao.service')
 const serviceProduto = require('../services/produto.service')
 
@@ -40,5 +41,7 @@ router.post('/movimentacao', async (req, res, next) => {
     next(error)
   }
 })
+
+router.applyRoutes(server)
 
 module.exports = router

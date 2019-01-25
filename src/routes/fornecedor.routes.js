@@ -34,10 +34,10 @@ router.post('/fornecedor', async (req, res, next) => {
   try {
     const fornecedor = req.body
     const result = await service.create(fornecedor)
-    res.send({ result })
-    next()
+    res.send({ fornecedor: result })
+    return next()
   } catch (error) {
-    res.send(400, { error: error.parent.sqlMessage })
+    res.send(400, { error: error.message })
     return next()
   }
 })
@@ -53,7 +53,7 @@ router.put('/fornecedor/:id', async (req, res, next) => {
     }
     await service.update(data, id)
     res.send({ msg: 'Fornecedor atualizado com sucesso' })
-    next()
+    return next()
   } catch (error) {
     res.send(400, { error: error.parent.sqlMessage })
     return next()
