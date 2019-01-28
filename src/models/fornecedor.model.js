@@ -1,6 +1,6 @@
-const db = require('../config/db')
+import db from '../config/db'
+import Produto from '../models/produto.model'
 const type = db.Sequelize
-const Produto = require('../models/produto.model')
 
 let Fornecedor = db.define(
   'fornecedor',
@@ -64,10 +64,12 @@ let Fornecedor = db.define(
   }
 )
 
+Produto.belongsTo(Fornecedor)
+
 Fornecedor.hasMany(Produto, {
   foreignKey: 'fornecedorId',
   onDelete: 'cascade',
   hooks: true
 })
 
-module.exports = Fornecedor
+export default Fornecedor

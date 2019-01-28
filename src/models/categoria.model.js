@@ -1,6 +1,6 @@
-const db = require('../config/db')
+import db from '../config/db'
+import Produto from '../models/produto.model'
 const type = db.Sequelize
-const Produto = require('../models/produto.model')
 
 let Categoria = db.define(
   'categoria',
@@ -25,10 +25,12 @@ let Categoria = db.define(
   }
 )
 
+Produto.belongsTo(Categoria, { as: 'categoria' })
+
 Categoria.hasMany(Produto, {
   foreignKey: 'categoriaId',
   onDelete: 'cascade',
   hooks: true
 })
 
-module.exports = Categoria
+export default Categoria

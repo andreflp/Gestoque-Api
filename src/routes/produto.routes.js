@@ -1,15 +1,15 @@
-const Router = require('restify-router').Router
+import server from '../server/index'
+import { Router } from 'restify-router'
+import serviceProduto from '../services/produto.service'
+import serviceMovimentacao from '../services/movimentacao.service'
 const router = new Router()
-const server = require('../server/index')
-const serviceProduto = require('../services/produto.service')
-const serviceMovimentacao = require('../services/movimentacao.service')
 
 router.get('/produto', async (req, res, next) => {
   try {
     const produtos = await serviceProduto.findAll()
     res.send({ produtos })
   } catch (error) {
-    res.send(400, { error: error.parent.sqlMessage })
+    res.send(400, { error })
     return next()
   }
 })
@@ -85,4 +85,4 @@ router.del('/produto/:id', async (req, res, next) => {
 
 router.applyRoutes(server)
 
-module.exports = router
+export default router

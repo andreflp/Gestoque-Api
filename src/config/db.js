@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize')
+import Sequelize from 'sequelize'
 
 const sequelize = new Sequelize(
   process.env.MYSQL_DATABASE,
@@ -21,4 +21,4 @@ const sequelize = new Sequelize(
 
 sequelize.sync()
 
-module.exports = sequelize
+export default sequelize

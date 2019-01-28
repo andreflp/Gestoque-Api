@@ -1,4 +1,4 @@
-const model = require('../models/usuario.model')
+import model from '../models/usuario.model'
 
 function findAll () {
   return new Promise(async (resolve, reject) => {
@@ -30,6 +30,21 @@ function findByUsuario (usuario) {
       const result = await model.findOne({
         where: { usuario: usuario },
         attributes: ['usuario', 'senha']
+      })
+      resolve(result)
+    } catch (error) {
+      console.log(error)
+      reject(error)
+    }
+  })
+}
+
+function findByEmail (usuario) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await model.findOne({
+        where: { email: usuario },
+        attributes: ['email']
       })
       resolve(result)
     } catch (error) {
@@ -75,4 +90,12 @@ function del (id) {
   })
 }
 
-module.exports = { findAll, create, update, del, findById, findByUsuario }
+export default {
+  findAll,
+  create,
+  update,
+  del,
+  findById,
+  findByUsuario,
+  findByEmail
+}

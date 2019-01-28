@@ -1,13 +1,14 @@
-const Router = require('restify-router').Router
+import { Router } from 'restify-router'
+import service from '../services/usuario.service'
+import server from '../server/index'
+import errorHandler from '../server/errorHandler'
 const router = new Router()
-const service = require('../services/usuario.service')
-const server = require('../server/index')
 
 router.get('/usuario', async (req, res, next) => {
   try {
     const usuarios = await service.findAll()
     res.send({ usuarios })
-    return next()
+    next()
   } catch (error) {
     next(error)
   }
@@ -19,25 +20,35 @@ router.get('/usuario/:usuario', async (req, res, next) => {
     const usuario = await service.findByUsuario(data)
     if (usuario === null) {
       res.send(404, { msg: 'Usuário não encontrado' })
-      return next(false)
+      next(false)
     }
     res.send({ usuario })
-    return next()
+    next()
   } catch (error) {
-    res.send(400, { error })
-    return next()
+    res.send(400, { error: error.name })
+    next()
   }
 })
 
-router.post('/usuario', async (req, res, next) => {
+router.post('/usuario/signup', async (req, res, next) => {
   try {
     const usuario = req.body
+    const usuarioEmail = await service.findByEmail(usuario.email)
+    const usuarioUsuario = await service.findByUsuario(usuario.usuario)
+    if (usuarioEmail && usuarioEmail.email === usuario.email) {
+      res.send(400, { msg: 'Email já cadastrado' })
+      return next(false)
+    }
+
+    if (usuarioUsuario && usuarioUsuario.usuario === usuario.usuario) {
+      res.send(400, { msg: 'Usuário já cadastrado' })
+      return next(false)
+    }
     const result = await service.create(usuario)
     res.send({ usuario: result })
     next()
   } catch (error) {
-    next(error)
-    return next()
+    errorHandler(res, error, next)
   }
 })
 
@@ -48,14 +59,14 @@ router.put('/usuario/:id', async (req, res, next) => {
     const usuario = await service.findById(id)
     if (usuario === null) {
       res.send(404, { msg: 'Usuário não encontrado' })
-      return next(false)
+      next(false)
     }
     await service.update(data, id)
     res.send({ msg: 'Usuário atualizado com sucesso' })
-    return next()
+    next()
   } catch (error) {
-    res.send(400, { error: error.parent.sqlMessage })
-    return next()
+    res.send(400, { error: error.name })
+    next()
   }
 })
 
@@ -65,17 +76,17 @@ router.del('/usuario/:id', async (req, res, next) => {
     const usuario = await service.findById(id)
     if (usuario === null) {
       res.send(404, { msg: 'Usuário não encontrada' })
-      return next(false)
+      next(false)
     }
     await service.del(id)
     res.send({ msg: 'Usuário excluido com sucesso' })
-    return next()
+    next()
   } catch (error) {
-    res.send(400, { error: error.parent.sqlMessage })
-    return next()
+    res.send(400, { error: error.name })
+    next()
   }
 })
 
 router.applyRoutes(server)
 
-module.exports = router
+export default router

@@ -1,6 +1,6 @@
-const db = require('../config/db')
+import db from '../config/db'
+import bcrypt from 'bcrypt'
 const type = db.Sequelize
-const bcrypt = require('bcrypt')
 
 const Usuario = db.define(
   'usuario',
@@ -23,11 +23,13 @@ const Usuario = db.define(
       allowNull: false,
       validate: {
         isEmail: true
-      }
+      },
+      unique: true
     },
     usuario: {
       type: type.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     senha: {
       type: type.STRING,
@@ -48,4 +50,4 @@ Usuario.beforeCreate(async (usuario, options) => {
   usuario.senha = hash
 })
 
-module.exports = Usuario
+export default Usuario

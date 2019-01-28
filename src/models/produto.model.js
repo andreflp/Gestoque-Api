@@ -1,4 +1,4 @@
-const db = require('../config/db')
+import db from '../config/db'
 const type = db.Sequelize
 
 let Produto = db.define(
@@ -36,4 +36,4 @@ let Produto = db.define(
   }
 )
 
-module.exports = Produto
+export default Produto

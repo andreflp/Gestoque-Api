@@ -1,4 +1,4 @@
-const model = require('../models/categoria.model')
+import model from '../models/categoria.model'
 
 function findAll () {
   return new Promise(async (resolve, reject) => {
@@ -60,4 +60,4 @@ function del (id) {
   })
 }
 
-module.exports = { findAll, findById, create, update, del }
+export default { findAll, findById, create, update, del }

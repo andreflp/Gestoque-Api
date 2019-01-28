@@ -1,4 +1,4 @@
-const corsMiddleware = require('restify-cors-middleware')
+import corsMiddleware from 'restify-cors-middleware'
 
 const cors = corsMiddleware({
   preflightMaxAge: 5,
@@ -7,4 +7,4 @@ const cors = corsMiddleware({
   exposeHeaders: ['*']
 })
 
-module.exports = cors
+export default cors

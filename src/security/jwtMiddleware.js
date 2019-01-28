@@ -1,17 +1,19 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 const jwtMiddleware = deps => {
   return async (req, res, next) => {
     if (!deps.routes.includes(req.href())) {
       const token = getToken(req)
-      if (token) {
+      if (!token) {
+        res.send(403, { error: 'Token inválido' })
+        return next(false)
+      }
+      try {
         req.decoded = jwt.verify(token, process.env.SECRET)
-        if (req.decoded) {
-          return next()
-        } else {
-          res.send(403, { error: 'Token inválido' })
-          return next(false)
-        }
+        next()
+      } catch (error) {
+        res.send(403, { error: 'Falha ao autenticar o token' })
+        next(false)
       }
     } else {
       next()
@@ -30,4 +32,4 @@ function getToken (req) {
   return undefined
 }
 
-module.exports = jwtMiddleware
+export default jwtMiddleware

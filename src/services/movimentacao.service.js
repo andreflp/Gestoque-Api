@@ -1,4 +1,4 @@
-const model = require('../models/movimentacao.model')
+import model from '../models/movimentacao.model'
 
 function findAll () {
   return new Promise(async (resolve, reject) => {
@@ -48,4 +48,4 @@ function del (id) {
   })
 }
 
-module.exports = { findAll, create, update, del }
+export default { findAll, create, update, del }

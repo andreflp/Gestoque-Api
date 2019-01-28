@@ -1,6 +1,6 @@
-const db = require('../config/db')
+import db from '../config/db'
+import Produto from '../models/produto.model'
 const type = db.Sequelize
-const Produto = require('../models/produto.model')
 
 let Movimentacao = db.define(
   'movimentacao',
@@ -34,4 +34,4 @@ Produto.hasOne(Movimentacao, {
   hooks: true
 })
 
-module.exports = Movimentacao
+export default Movimentacao

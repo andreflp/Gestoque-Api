@@ -1,8 +1,8 @@
-const Router = require('restify-router').Router
+import server from '../server/index'
+import { Router } from 'restify-router'
+import serviceMovimentacao from '../services/movimentacao.service'
+import serviceProduto from '../services/produto.service'
 const router = new Router()
-const server = require('../server/index')
-const serviceMovimentacao = require('../services/movimentacao.service')
-const serviceProduto = require('../services/produto.service')
 
 router.get('/movimentacao', async (req, res, next) => {
   try {
@@ -19,15 +19,18 @@ router.post('/movimentacao', async (req, res, next) => {
     let entrada
     let saida
     let produto = await serviceProduto.findById(movimentacao.produtoId)
-
+    if (produto === null) {
+      res.send(400, { msg: 'Produto não enconrado' })
+      next(false)
+    }
     if (movimentacao.tipo === 'E') {
       entrada = produto.quantidade + movimentacao.quantidade
       produto.quantidade = entrada
       produto.save()
     } else if (movimentacao.tipo === 'S') {
       if (movimentacao.quantidade > produto.quantidade) {
-        res.send(400, { error: 'Quantidade maior do que a do produto' })
-        return false
+        res.send(400, { msg: 'Quantidade maior que a do produto' })
+        next(false)
       }
       saida = produto.quantidade - movimentacao.quantidade
       produto.quantidade = saida
@@ -44,4 +47,4 @@ router.post('/movimentacao', async (req, res, next) => {
 
 router.applyRoutes(server)
 
-module.exports = router
+export default router

@@ -1,15 +1,15 @@
-const Router = require('restify-router').Router
+import server from '../server/index'
+import { Router } from 'restify-router'
+import service from '../services/usuario.service'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 const router = new Router()
-const service = require('../services/usuario.service')
-const server = require('../server/index')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 
 function compararSenhas (senha, senhaUsuario) {
   return bcrypt.compareSync(senha, senhaUsuario)
 }
 
-router.post('/auth', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   try {
     const { usuario, senha } = req.body
     const result = await service.findByUsuario(usuario)
@@ -24,7 +24,7 @@ router.post('/auth', async (req, res, next) => {
 
       res.send({ usuario: result.usuario, token })
     } else {
-      res.send({ error: 'Credencial inválida' })
+      res.send(403, { error: 'Credencial inválida' })
       return next()
     }
   } catch (error) {
@@ -35,4 +35,4 @@ router.post('/auth', async (req, res, next) => {
 
 router.applyRoutes(server)
 
-module.exports = router
+export default router

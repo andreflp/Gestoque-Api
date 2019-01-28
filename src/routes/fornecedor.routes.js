@@ -1,7 +1,7 @@
-const Router = require('restify-router').Router
+import server from '../server/index'
+import service from '../services/fornecedor.service'
+import { Router } from 'restify-router'
 const router = new Router()
-const service = require('../services/fornecedor.service')
-const server = require('../server/index')
 
 router.get('/fornecedor', async (req, res, next) => {
   try {
@@ -79,4 +79,4 @@ router.del('/fornecedor/:id', async (req, res, next) => {
 
 router.applyRoutes(server)
 
-module.exports = router
+export default router
