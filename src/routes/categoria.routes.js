@@ -5,7 +5,8 @@ const router = new Router()
 
 router.get('/categoria', async (req, res, next) => {
   try {
-    const categorias = await service.findAll()
+    let pagination = req.query
+    const categorias = await service.findAll(pagination)
     res.send({ categorias })
     return next()
   } catch (error) {

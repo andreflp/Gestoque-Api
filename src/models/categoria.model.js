@@ -25,10 +25,10 @@ let Categoria = db.define(
   }
 )
 
-Produto.belongsTo(Categoria, { as: 'categoria' })
+Produto.belongsTo(Categoria, { as: 'categoria', onDelete: 'cascade' })
 
 Categoria.hasMany(Produto, {
-  foreignKey: 'categoriaId',
+  foreignKey: { name: 'categoriaId', allowNull: false },
   onDelete: 'cascade',
   hooks: true
 })

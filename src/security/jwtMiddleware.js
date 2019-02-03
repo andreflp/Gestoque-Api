@@ -6,13 +6,13 @@ const jwtMiddleware = deps => {
       const token = getToken(req)
       if (!token) {
         res.send(403, { error: 'Token inválido' })
-        return next(false)
+        next(false)
       }
       try {
         req.decoded = jwt.verify(token, process.env.SECRET)
         next()
       } catch (error) {
-        res.send(403, { error: 'Falha ao autenticar o token' })
+        res.send(403, { message: 'Falha ao autenticar o token', error })
         next(false)
       }
     } else {

@@ -15,21 +15,18 @@ router.post('/login', async (req, res, next) => {
     const result = await service.findByUsuario(usuario)
     if (result && compararSenhas(senha, result.senha)) {
       const token = jwt.sign(
-        {
-          sub: result.usuario,
-          iss: 'gestoque-api'
-        },
-        process.env.SECRET
+        { sub: result.usuario, iss: 'gestoque-api' },
+        process.env.SECRET,
+        { expiresIn: 60 * 60 * 24 }
       )
 
       res.send({ usuario: result.usuario, token })
     } else {
       res.send(403, { error: 'Credencial inválida' })
-      return next()
+      next()
     }
   } catch (error) {
     next(error)
-    return next()
   }
 })
 

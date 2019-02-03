@@ -1,10 +1,27 @@
 import model from '../models/categoria.model'
+import sequelize from '../config/db'
+const Op = sequelize.Op
 
-function findAll () {
+function findAll (pagination) {
   return new Promise(async (resolve, reject) => {
     try {
-      const categorias = await model.findAll()
-      resolve(categorias)
+      let limit = parseInt(pagination.rowsPerPage)
+      const categoriasCount = await model.findAndCountAll({
+        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } }
+      })
+      let page = parseInt(pagination.page)
+      let pages = Math.ceil(categoriasCount.count / limit)
+      let offset = limit * (page - 1)
+      let categorias = await model.findAll({
+        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } },
+        limit: limit,
+        offset: offset
+      })
+      page = parseInt(pagination.page)
+      pages = Math.ceil(categoriasCount.count / limit)
+      offset = limit * (page - 1)
+
+      resolve({ categorias, count: categoriasCount.count, pages })
     } catch (error) {
       console.log(error)
       reject(error)

@@ -64,10 +64,10 @@ let Fornecedor = db.define(
   }
 )
 
-Produto.belongsTo(Fornecedor)
+Produto.belongsTo(Fornecedor, { onDelete: 'cascade' })
 
 Fornecedor.hasMany(Produto, {
-  foreignKey: 'fornecedorId',
+  foreignKey: { name: 'fornecedorId', allowNull: false },
   onDelete: 'cascade',
   hooks: true
 })
