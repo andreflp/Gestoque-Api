@@ -5,7 +5,8 @@ const router = new Router()
 
 router.get('/fornecedor', async (req, res, next) => {
   try {
-    const fornecedores = await service.findAll()
+    let pagination = req.query
+    const fornecedores = await service.findAll(pagination)
     res.send({ fornecedores })
     return next()
   } catch (error) {

@@ -1,11 +1,23 @@
 import Fornecedor from '../models/fornecedor.model'
 import Categoria from '../models/categoria.model'
 import model from '../models/produto.model'
+import sequelize from '../config/db'
+const Op = sequelize.Op
 
-function findAll () {
+function findAll (pagination) {
   return new Promise(async (resolve, reject) => {
     try {
+      let limit = parseInt(pagination.rowsPerPage)
+      const produtosCount = await model.findAndCountAll({
+        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } }
+      })
+      let page = parseInt(pagination.page)
+      let pages = Math.ceil(produtosCount.count / limit)
+      let offset = limit * (page - 1)
       const produtos = await model.findAll({
+        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } },
+        limit: limit,
+        offset: offset,
         include: [
           {
             model: Categoria,
@@ -15,7 +27,10 @@ function findAll () {
           { model: Fornecedor, attributes: { exclude: ['createdAt'] } }
         ]
       })
-      resolve(produtos)
+      page = parseInt(pagination.page)
+      pages = Math.ceil(produtosCount.count / limit)
+      offset = limit * (page - 1)
+      resolve({ produtos, count: produtosCount.count, pages })
     } catch (error) {
       reject(error)
     }

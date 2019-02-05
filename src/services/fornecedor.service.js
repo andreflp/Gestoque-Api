@@ -1,10 +1,26 @@
 import model from '../models/fornecedor.model'
+import sequelize from '../config/db'
+const Op = sequelize.Op
 
-function findAll () {
+function findAll (pagination) {
   return new Promise(async (resolve, reject) => {
     try {
-      const fornecedores = await model.findAll()
-      resolve(fornecedores)
+      let limit = parseInt(pagination.rowsPerPage)
+      const fornecedoresCount = await model.findAndCountAll({
+        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } }
+      })
+      let page = parseInt(pagination.page)
+      let pages = Math.ceil(fornecedoresCount.count / limit)
+      let offset = limit * (page - 1)
+      let fornecedores = await model.findAll({
+        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } },
+        limit: limit,
+        offset: offset
+      })
+      page = parseInt(pagination.page)
+      pages = Math.ceil(fornecedoresCount.count / limit)
+      offset = limit * (page - 1)
+      resolve({ fornecedores, count: fornecedoresCount.count, pages })
     } catch (error) {
       console.log(error)
       reject(error)

@@ -78,3 +78,7 @@ function del (id) {
 }
 
 export default { findAll, findById, create, update, del }
+
+/* where: {
+  [Op.or]: [{ nome: { [Op.like]: '%' + pagination.nome + '%' } }]
+}, */
