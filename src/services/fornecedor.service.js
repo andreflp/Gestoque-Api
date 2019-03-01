@@ -7,13 +7,17 @@ function findAll (pagination) {
     try {
       let limit = parseInt(pagination.rowsPerPage)
       const fornecedoresCount = await model.findAndCountAll({
-        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } }
+        where: {
+          nome: { [Op.like]: '%' + pagination.nome + '%' }
+        },
+        order: [['nome', 'ASC']]
       })
       let page = parseInt(pagination.page)
       let pages = Math.ceil(fornecedoresCount.count / limit)
       let offset = limit * (page - 1)
       let fornecedores = await model.findAll({
         where: { nome: { [Op.like]: '%' + pagination.nome + '%' } },
+        order: [['nome', 'ASC']],
         limit: limit,
         offset: offset
       })

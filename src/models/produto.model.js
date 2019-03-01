@@ -23,7 +23,7 @@ let Produto = db.define(
       allowNull: false
     },
     preco: {
-      type: type.DOUBLE,
+      type: type.DECIMAL(12, 2),
       allowNull: false
     },
     createdAt: {

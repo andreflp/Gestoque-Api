@@ -19,7 +19,7 @@ router.get('/usuario/:usuario', async (req, res, next) => {
     const data = req.params.usuario
     const usuario = await service.findByUsuario(data)
     if (usuario === null) {
-      res.send(404, { msg: 'Usuário não encontrado' })
+      res.send(404, { message: 'Usuário não encontrado' })
       next(false)
     }
     res.send({ usuario })
@@ -35,13 +35,13 @@ router.post('/usuario/signup', async (req, res, next) => {
     const usuario = req.body
     const usuarioEmail = await service.findByEmail(usuario.email)
     const usuarioUsuario = await service.findByUsuario(usuario.usuario)
-    if (usuarioEmail && usuarioEmail.email === usuario.email) {
-      res.send(400, { msg: 'Email já cadastrado' })
+    if (usuarioUsuario && usuarioUsuario.usuario === usuario.usuario) {
+      res.send(400, { message: 'Usuário já cadastrado' })
       return next(false)
     }
 
-    if (usuarioUsuario && usuarioUsuario.usuario === usuario.usuario) {
-      res.send(400, { msg: 'Usuário já cadastrado' })
+    if (usuarioEmail && usuarioEmail.email === usuario.email) {
+      res.send(400, { message: 'Email já cadastrado' })
       return next(false)
     }
     const result = await service.create(usuario)
@@ -58,11 +58,11 @@ router.put('/usuario/:id', async (req, res, next) => {
     const data = req.body
     const usuario = await service.findById(id)
     if (usuario === null) {
-      res.send(404, { msg: 'Usuário não encontrado' })
+      res.send(404, { message: 'Usuário não encontrado' })
       next(false)
     }
     await service.update(data, id)
-    res.send({ msg: 'Usuário atualizado com sucesso' })
+    res.send({ message: 'Usuário atualizado com sucesso' })
     next()
   } catch (error) {
     res.send(400, { error: error.name })
@@ -75,11 +75,11 @@ router.del('/usuario/:id', async (req, res, next) => {
     const id = req.params.id
     const usuario = await service.findById(id)
     if (usuario === null) {
-      res.send(404, { msg: 'Usuário não encontrada' })
+      res.send(404, { message: 'Usuário não encontrada' })
       next(false)
     }
     await service.del(id)
-    res.send({ msg: 'Usuário excluido com sucesso' })
+    res.send({ message: 'Usuário excluido com sucesso' })
     next()
   } catch (error) {
     res.send(400, { error: error.name })

@@ -20,25 +20,26 @@ router.post('/movimentacao', async (req, res, next) => {
     let saida
     let produto = await serviceProduto.findById(movimentacao.produtoId)
     if (produto === null) {
-      res.send(400, { msg: 'Produto não enconrado' })
+      res.send(400, { message: 'Produto não enconrado' })
       next(false)
     }
+    let quantidade = parseInt(movimentacao.quantidade)
     if (movimentacao.tipo === 'E') {
-      entrada = produto.quantidade + movimentacao.quantidade
+      entrada = produto.quantidade + quantidade
       produto.quantidade = entrada
       produto.save()
     } else if (movimentacao.tipo === 'S') {
-      if (movimentacao.quantidade > produto.quantidade) {
-        res.send(400, { msg: 'Quantidade maior que a do produto' })
+      if (quantidade > produto.quantidade) {
+        res.send(400, { message: 'Quantidade maior que a do produto' })
         next(false)
       }
-      saida = produto.quantidade - movimentacao.quantidade
+      saida = produto.quantidade - quantidade
       produto.quantidade = saida
       produto.save()
     }
 
     await serviceMovimentacao.create(movimentacao)
-    res.send({ msg: 'Movimentação feita com sucesso' })
+    res.send({ message: 'Movimentação feita com sucesso' })
     next()
   } catch (error) {
     next(error)

@@ -7,15 +7,19 @@ const Op = sequelize.Op
 function findAll (pagination) {
   return new Promise(async (resolve, reject) => {
     try {
+      let sort = pagination.descending
+      console.log('AQUIIIIIII', sort)
       let limit = parseInt(pagination.rowsPerPage)
       const produtosCount = await model.findAndCountAll({
-        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } }
+        where: { nome: { [Op.like]: '%' + pagination.nome + '%' } },
+        order: [['nome', sort ? 'DESC' : 'ASC']]
       })
       let page = parseInt(pagination.page)
       let pages = Math.ceil(produtosCount.count / limit)
       let offset = limit * (page - 1)
       const produtos = await model.findAll({
         where: { nome: { [Op.like]: '%' + pagination.nome + '%' } },
+        order: [['nome', sort ? 'DESC' : 'ASC']],
         limit: limit,
         offset: offset,
         include: [

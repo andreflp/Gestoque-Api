@@ -1,6 +1,7 @@
 import server from '../server/index'
 import service from '../services/fornecedor.service'
 import { Router } from 'restify-router'
+import errorHandler from '../server/errorHandler'
 const router = new Router()
 
 router.get('/fornecedor', async (req, res, next) => {
@@ -20,7 +21,7 @@ router.get('/fornecedor/:id', async (req, res, next) => {
     const data = req.params.id
     const fornecedor = await service.findById(data)
     if (fornecedor === null) {
-      res.send(404, { msg: 'Fornecedor não encontrado' })
+      res.send(404, { message: 'Fornecedor não encontrado' })
       return next(false)
     }
     res.send({ fornecedor })
@@ -38,8 +39,7 @@ router.post('/fornecedor', async (req, res, next) => {
     res.send({ fornecedor: result })
     return next()
   } catch (error) {
-    res.send(400, { error: error.message })
-    return next()
+    errorHandler(res, error, next)
   }
 })
 
@@ -49,11 +49,11 @@ router.put('/fornecedor/:id', async (req, res, next) => {
     const data = req.body
     const fornecedor = await service.findById(id)
     if (fornecedor === null) {
-      res.send(404, { msg: 'Fornecedor não encontrado' })
+      res.send(404, { message: 'Fornecedor não encontrado' })
       return next(false)
     }
     await service.update(data, id)
-    res.send({ msg: 'Fornecedor atualizado com sucesso' })
+    res.send({ message: 'Fornecedor atualizado com sucesso' })
     return next()
   } catch (error) {
     res.send(400, { error: error.parent.sqlMessage })
@@ -66,11 +66,11 @@ router.del('/fornecedor/:id', async (req, res, next) => {
     const id = req.params.id
     const fornecedor = await service.findById(id)
     if (fornecedor === null) {
-      res.send(404, { msg: 'Fornecedor não encontrada' })
+      res.send(404, { message: 'Fornecedor não encontrada' })
       return next(false)
     }
     await service.del(id)
-    res.send({ msg: 'Fornecedor excluido com sucesso' })
+    res.send({ message: 'Fornecedor excluido com sucesso' })
     return next()
   } catch (error) {
     res.send(400, { error: error.parent.sqlMessage })

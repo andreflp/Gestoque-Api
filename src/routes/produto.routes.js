@@ -2,6 +2,7 @@ import server from '../server/index'
 import { Router } from 'restify-router'
 import serviceProduto from '../services/produto.service'
 import serviceMovimentacao from '../services/movimentacao.service'
+import errorHandler from '../server/errorHandler'
 const router = new Router()
 
 router.get('/produto', async (req, res, next) => {
@@ -20,7 +21,7 @@ router.get('/produto/:id', async (req, res, next) => {
     const data = req.params.id
     const produto = await serviceProduto.findById(data)
     if (produto === null) {
-      res.send(404, { msg: 'Produto não encontrado' })
+      res.send(404, { message: 'Produto não encontrado' })
       return next(false)
     }
     res.send({ produto })
@@ -44,8 +45,7 @@ router.post('/produto', async (req, res, next) => {
     res.send({ result })
     next()
   } catch (error) {
-    res.send(400, { error: error.parent.sqlMessage })
-    return next()
+    errorHandler(res, error, next)
   }
 })
 
@@ -55,11 +55,11 @@ router.put('/produto/:id', async (req, res, next) => {
     const data = req.body
     const produto = serviceProduto.findById(id)
     if (produto === null) {
-      res.send(404, { msg: 'Produto não encontrado' })
+      res.send(404, { message: 'Produto não encontrado' })
       return next(false)
     }
     await serviceProduto.update(data, id)
-    res.send({ msg: 'Fornecedor atualizado com sucesso' })
+    res.send({ message: 'Fornecedor atualizado com sucesso' })
     next()
   } catch (error) {
     res.send(400, { error: error.parent.sqlMessage })
@@ -72,11 +72,11 @@ router.del('/produto/:id', async (req, res, next) => {
     const id = req.params.id
     const produto = serviceProduto.findById(id)
     if (produto === null) {
-      res.send(404, { msg: 'Produto não encontrado' })
+      res.send(404, { message: 'Produto não encontrado' })
       return next(false)
     }
     await serviceProduto.del(id)
-    res.send({ msg: 'Fornecedor excluido com sucesso' })
+    res.send({ message: 'Fornecedor excluido com sucesso' })
     next()
   } catch (error) {
     res.send(400, { error: error.parent.sqlMessage })
